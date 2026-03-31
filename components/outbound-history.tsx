@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { ClipboardList, Send, Trash2 } from "lucide-react"
 import type { OutboundRecord } from "@/lib/types"
 
@@ -36,11 +36,11 @@ export function OutboundHistory({ records }: OutboundHistoryProps) {
       <CardContent>
         {records.length === 0 ? (
           <Empty className="py-12">
-            <Empty.Icon>
-              <ClipboardList className="h-12 w-12" />
-            </Empty.Icon>
-            <Empty.Title>暂无出库记录</Empty.Title>
-            <Empty.Description>选择产品并提交出库后，记录将显示在这里</Empty.Description>
+            <EmptyMedia variant="icon">
+              <ClipboardList className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>暂无出库记录</EmptyTitle>
+            <EmptyDescription>选择产品并提交出库后，记录将显示在这里</EmptyDescription>
           </Empty>
         ) : (
           <ScrollArea className="w-full">

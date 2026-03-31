@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
-import { Empty } from "@/components/ui/empty"
+import { Empty, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { ShoppingCart, ArrowLeft } from "lucide-react"
 import type { Product } from "@/lib/types"
 
@@ -89,10 +89,10 @@ export function SelectedProducts({ products, onDeselect, title, emptyText }: Sel
       <CardContent>
         {products.length === 0 ? (
           <Empty className="py-8">
-            <Empty.Icon>
-              <ShoppingCart className="h-10 w-10" />
-            </Empty.Icon>
-            <Empty.Title>{emptyText}</Empty.Title>
+            <EmptyMedia variant="icon">
+              <ShoppingCart className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>{emptyText}</EmptyTitle>
           </Empty>
         ) : (
           <>
