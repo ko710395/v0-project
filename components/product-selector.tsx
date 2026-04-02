@@ -321,11 +321,13 @@ export function ProductSelector({ products, onSelect, title, emptyText }: Produc
                       />
                       <label
                         htmlFor={`product-${product.id}`}
-                        className="flex flex-1 cursor-pointer items-start justify-between gap-2"
+                        className="flex flex-1 cursor-pointer items-stretch justify-between gap-2"
                       >
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium text-foreground">{product.name}</p>
-                          <p className="text-xs text-muted-foreground">{product.type}</p>
+                        <div className="min-w-0 flex-1 flex flex-col justify-between">
+                          <div>
+                            <p className="truncate font-medium text-foreground">{product.name}</p>
+                            <p className="text-xs text-muted-foreground">{product.type}</p>
+                          </div>
                           {(product.tags ?? []).length > 0 && (
                             <div className="mt-1 flex flex-wrap gap-1">
                               {(product.tags ?? []).map((tag) => (
@@ -341,7 +343,7 @@ export function ProductSelector({ products, onSelect, title, emptyText }: Produc
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-col items-end gap-1 shrink-0">
+                        <div className="flex flex-col items-end justify-between shrink-0">
                           <Badge variant="outline" className="text-xs">
                             {product.brand}
                           </Badge>
