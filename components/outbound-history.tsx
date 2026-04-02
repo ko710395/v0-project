@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Empty, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
-import { ClipboardList, Send, Trash2, Undo2 } from "lucide-react"
+import { ClipboardList, Send, Trash2, Undo2, Tag } from "lucide-react"
 import type { OutboundRecord } from "@/lib/types"
 
 interface OutboundHistoryProps {
@@ -53,6 +53,7 @@ export function OutboundHistory({ records, onRevoke }: OutboundHistoryProps) {
                   <TableHead className="min-w-[80px]">类型</TableHead>
                   <TableHead className="min-w-[80px]">品牌</TableHead>
                   <TableHead className="min-w-[60px]">国家</TableHead>
+                  <TableHead className="min-w-[120px]">标签</TableHead>
                   <TableHead className="min-w-[80px] text-right">成本 (¥)</TableHead>
                   <TableHead className="min-w-[80px] text-right">售价 (¥)</TableHead>
                   <TableHead className="min-w-[60px] text-right">汇率</TableHead>
@@ -88,6 +89,19 @@ export function OutboundHistory({ records, onRevoke }: OutboundHistoryProps) {
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {record.productCountry}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {record.productTags.length > 0
+                            ? record.productTags.map((tag) => (
+                                <Badge key={tag} variant="outline" className="h-4 gap-0.5 px-1 text-[10px]">
+                                  <Tag className="h-2.5 w-2.5" />
+                                  {tag}
+                                </Badge>
+                              ))
+                            : <span className="text-muted-foreground text-sm">-</span>
+                          }
+                        </div>
                       </TableCell>
                       <TableCell className="text-right font-mono">
                         {record.cost.toLocaleString()}

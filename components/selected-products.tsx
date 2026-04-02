@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Empty, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
-import { ShoppingCart, ArrowLeft } from "lucide-react"
+import { ShoppingCart, ArrowLeft, Tag } from "lucide-react"
 import type { Product } from "@/lib/types"
 
 interface SelectedProductsProps {
@@ -131,13 +131,27 @@ export function SelectedProducts({ products, onDeselect, title, emptyText }: Sel
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-medium text-foreground">{product.name}</p>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <span>{product.type}</span>
                           <span>·</span>
                           <span>{product.brand}</span>
                           <span>·</span>
                           <span>{product.country}</span>
                         </div>
+                        {product.tags.length > 0 && (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {product.tags.map((tag) => (
+                              <Badge
+                                key={tag}
+                                variant="outline"
+                                className="h-4 gap-0.5 px-1 text-[10px]"
+                              >
+                                <Tag className="h-2.5 w-2.5" />
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <Badge variant="outline" className="font-mono shrink-0">
                         ¥{product.cost.toLocaleString()}

@@ -5,6 +5,7 @@ export interface Product {
   brand: string
   country: string
   cost: number
+  tags: string[]
 }
 
 export interface OutboundRecord {
@@ -13,6 +14,7 @@ export interface OutboundRecord {
   productType: "自加ID" | "链接单"
   productBrand: string
   productCountry: string
+  productTags: string[]
   cost: number
   sellingPrice: number
   exchangeRate: number

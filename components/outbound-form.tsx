@@ -16,9 +16,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { FileOutput, Trash2, Send, Info } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface OutboundFormProps {
-  onSubmit: (data: { 
+  onSubmit: (data: {
     sellingPrice: number
     exchangeRate: number
     outboundType: "出库" | "折损"
@@ -35,28 +36,29 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
   const [outboundType, setOutboundType] = useState<"出库" | "折损">("出库")
   const [remark, setRemark] = useState("")
 
+  const isLoss = outboundType === "折损"
+
   const handleSubmit = () => {
-    const price = parseFloat(sellingPrice)
-    const rate = parseFloat(exchangeRate)
-
-    if (isNaN(price) || price < 0) {
-      alert("请输入有效的售价")
-      return
-    }
-
-    if (isNaN(rate) || rate <= 0) {
-      alert("请输入有效的汇率")
-      return
+    if (!isLoss) {
+      const price = parseFloat(sellingPrice)
+      const rate = parseFloat(exchangeRate)
+      if (isNaN(price) || price < 0) {
+        alert("请输入有效的售价")
+        return
+      }
+      if (isNaN(rate) || rate <= 0) {
+        alert("请输入有效的汇率")
+        return
+      }
     }
 
     onSubmit({
-      sellingPrice: price,
-      exchangeRate: rate,
+      sellingPrice: isLoss ? 0 : parseFloat(sellingPrice),
+      exchangeRate: isLoss ? 1 : parseFloat(exchangeRate),
       outboundType,
       remark: remark.trim(),
     })
 
-    // 重置表单
     setSellingPrice("")
     setExchangeRate("1.00")
     setOutboundType("出库")
@@ -73,27 +75,28 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
           </CardTitle>
           {selectedCount > 0 && (
             <div className="flex items-center gap-3">
-              <Badge variant="secondary">
-                已选择 {selectedCount} 件产品
-              </Badge>
-              <Badge variant="outline">
-                总成本: ¥{totalCost.toLocaleString()}
-              </Badge>
+              <Badge variant="secondary">已选择 {selectedCount} 件产品</Badge>
+              <Badge variant="outline">总成本: ¥{totalCost.toLocaleString()}</Badge>
             </div>
           )}
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="flex flex-wrap items-end gap-6">
-            <FieldGroup className="flex-1 min-w-[200px]">
+          {/* 第一行：售价、汇率、出库类型 */}
+          <div className="flex flex-wrap items-end gap-4">
+            {/* 售价 */}
+            <FieldGroup className="flex-1 min-w-[160px]">
               <Field>
-                <FieldLabel htmlFor="selling-price" className="flex items-center gap-1">
+                <FieldLabel
+                  htmlFor="selling-price"
+                  className={cn("flex items-center gap-1", isLoss && "text-muted-foreground")}
+                >
                   售价 (¥)
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                        <Info className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>该售价是包含所选的所有产品的总售价</p>
@@ -104,49 +107,66 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
                 <Input
                   id="selling-price"
                   type="number"
-                  placeholder="请输入售价"
-                  value={sellingPrice}
+                  placeholder={isLoss ? "折损无需填写" : "请输入售价"}
+                  value={isLoss ? "" : sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
                   min="0"
                   step="0.01"
+                  disabled={isLoss}
+                  className={cn(isLoss && "bg-muted text-muted-foreground cursor-not-allowed")}
                 />
               </Field>
             </FieldGroup>
 
-            <FieldGroup className="flex-1 min-w-[200px]">
+            {/* 汇率 */}
+            <FieldGroup className="flex-1 min-w-[160px]">
               <Field>
-                <FieldLabel htmlFor="exchange-rate">汇率</FieldLabel>
+                <FieldLabel
+                  htmlFor="exchange-rate"
+                  className={cn(isLoss && "text-muted-foreground")}
+                >
+                  汇率
+                </FieldLabel>
                 <Input
                   id="exchange-rate"
                   type="number"
-                  placeholder="请输入汇率"
-                  value={exchangeRate}
+                  placeholder={isLoss ? "折损无需填写" : "请输入汇率"}
+                  value={isLoss ? "" : exchangeRate}
                   onChange={(e) => setExchangeRate(e.target.value)}
                   min="0"
                   step="0.01"
+                  disabled={isLoss}
+                  className={cn(isLoss && "bg-muted text-muted-foreground cursor-not-allowed")}
                 />
               </Field>
             </FieldGroup>
 
-            <FieldGroup className="flex-1 min-w-[200px]">
+            {/* 出库类型 */}
+            <FieldGroup className="min-w-[180px]">
               <Field>
                 <FieldLabel>出库类型</FieldLabel>
                 <RadioGroup
                   value={outboundType}
                   onValueChange={(value) => setOutboundType(value as "出库" | "折损")}
-                  className="flex gap-6 pt-2"
+                  className="flex gap-4 h-9 items-center"
                 >
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="出库" id="type-outbound" />
-                    <Label htmlFor="type-outbound" className="flex cursor-pointer items-center gap-1.5">
-                      <Send className="h-4 w-4 text-green-600" />
+                  <div className="flex items-center gap-1.5">
+                    <RadioGroupItem value="出库" id="type-outbound" className="h-4 w-4" />
+                    <Label
+                      htmlFor="type-outbound"
+                      className="flex cursor-pointer items-center gap-1 text-sm"
+                    >
+                      <Send className="h-3.5 w-3.5 text-green-600" />
                       出库
                     </Label>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="折损" id="type-loss" />
-                    <Label htmlFor="type-loss" className="flex cursor-pointer items-center gap-1.5">
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                  <div className="flex items-center gap-1.5">
+                    <RadioGroupItem value="折损" id="type-loss" className="h-4 w-4" />
+                    <Label
+                      htmlFor="type-loss"
+                      className="flex cursor-pointer items-center gap-1 text-sm"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-destructive" />
                       折损
                     </Label>
                   </div>
@@ -155,29 +175,29 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
             </FieldGroup>
           </div>
 
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="remark">备注（选填）</FieldLabel>
-              <Textarea
-                id="remark"
-                placeholder="请输入备注信息..."
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                className="resize-none"
-                rows={2}
-              />
-            </Field>
-          </FieldGroup>
+          {/* 第二行：备注 + 提交按钮同行 */}
+          <div className="flex items-end gap-3">
+            <FieldGroup className="flex-1">
+              <Field>
+                <FieldLabel htmlFor="remark">备注（选填）</FieldLabel>
+                <Textarea
+                  id="remark"
+                  placeholder="请输入备注信息..."
+                  value={remark}
+                  onChange={(e) => setRemark(e.target.value)}
+                  className="resize-none min-h-0 h-9 py-1.5 leading-5"
+                  rows={1}
+                />
+              </Field>
+            </FieldGroup>
 
-          <div className="flex justify-end">
             <Button
               onClick={handleSubmit}
               disabled={disabled}
-              size="lg"
-              className="gap-2"
+              className="gap-2 shrink-0 mb-px"
             >
               <Send className="h-4 w-4" />
-              提交出库
+              提交
             </Button>
           </div>
         </div>

@@ -9,18 +9,21 @@ import type { Product, OutboundRecord } from "@/lib/types"
 
 // 测试用例数据 - 产品名使用邮箱形式
 const initialProducts: Product[] = [
-  { id: "1", name: "john.doe@gmail.com", type: "自加ID", brand: "Google", country: "美国", cost: 150 },
-  { id: "2", name: "alice.smith@outlook.com", type: "链接单", brand: "Microsoft", country: "美国", cost: 200 },
-  { id: "3", name: "zhang.wei@qq.com", type: "自加ID", brand: "腾讯", country: "中国", cost: 80 },
-  { id: "4", name: "tanaka.yuki@yahoo.co.jp", type: "链接单", brand: "Yahoo", country: "日本", cost: 180 },
-  { id: "5", name: "kim.soo@naver.com", type: "自加ID", brand: "Naver", country: "韩国", cost: 120 },
-  { id: "6", name: "maria.garcia@icloud.com", type: "链接单", brand: "Apple", country: "美国", cost: 250 },
-  { id: "7", name: "li.ming@163.com", type: "自加ID", brand: "网易", country: "中国", cost: 90 },
-  { id: "8", name: "david.wilson@proton.me", type: "链接单", brand: "Proton", country: "瑞士", cost: 300 },
-  { id: "9", name: "sakura.hana@docomo.ne.jp", type: "自加ID", brand: "Docomo", country: "日本", cost: 160 },
-  { id: "10", name: "emma.brown@hotmail.com", type: "链接单", brand: "Microsoft", country: "英国", cost: 180 },
-  { id: "11", name: "wang.fang@sina.com", type: "自加ID", brand: "新浪", country: "中国", cost: 70 },
-  { id: "12", name: "park.jimin@kakao.com", type: "链接单", brand: "Kakao", country: "韩国", cost: 140 },
+  { id: "1",  name: "john.doe@gmail.com",       type: "自加ID", brand: "Google",    country: "美国",  cost: 150, tags: ["谷歌邮箱"] },
+  { id: "2",  name: "alice.smith@outlook.com",  type: "链接单", brand: "Microsoft", country: "美国",  cost: 200, tags: ["微软邮箱"] },
+  { id: "3",  name: "zhang.wei@qq.com",         type: "自加ID", brand: "腾讯",      country: "中国",  cost: 80,  tags: ["QQ邮箱"] },
+  { id: "4",  name: "tanaka.yuki@yahoo.co.jp",  type: "链接单", brand: "Yahoo",     country: "日本",  cost: 180, tags: ["雅虎邮箱"] },
+  { id: "5",  name: "kim.soo@naver.com",        type: "自加ID", brand: "Naver",     country: "韩国",  cost: 120, tags: ["韩国邮箱"] },
+  { id: "6",  name: "maria.garcia@icloud.com",  type: "链接单", brand: "Apple",     country: "美国",  cost: 250, tags: ["苹果邮箱"] },
+  { id: "7",  name: "li.ming@163.com",          type: "自加ID", brand: "网易",      country: "中国",  cost: 90,  tags: ["网易邮箱"] },
+  { id: "8",  name: "david.wilson@proton.me",   type: "链接单", brand: "Proton",    country: "瑞士",  cost: 300, tags: ["隐私邮箱"] },
+  { id: "9",  name: "sakura.hana@docomo.ne.jp", type: "自加ID", brand: "Docomo",    country: "日本",  cost: 160, tags: ["雅虎邮箱", "日本邮箱"] },
+  { id: "10", name: "emma.brown@hotmail.com",   type: "链接单", brand: "Microsoft", country: "英国",  cost: 180, tags: ["微软邮箱"] },
+  { id: "11", name: "wang.fang@sina.com",       type: "自加ID", brand: "新浪",      country: "中国",  cost: 70,  tags: ["国内邮箱"] },
+  { id: "12", name: "park.jimin@kakao.com",     type: "链接单", brand: "Kakao",     country: "韩国",  cost: 140, tags: ["韩国邮箱"] },
+  { id: "13", name: "bob.chen@qq.com",          type: "自加ID", brand: "腾讯",      country: "中国",  cost: 85,  tags: ["QQ邮箱", "国内邮箱"] },
+  { id: "14", name: "yuki.sato@yahoo.co.jp",    type: "链接单", brand: "Yahoo",     country: "日本",  cost: 175, tags: ["雅虎邮箱", "日本邮箱"] },
+  { id: "15", name: "james.lee@gmail.com",      type: "自加ID", brand: "Google",    country: "英国",  cost: 145, tags: ["谷歌邮箱"] },
 ]
 
 export default function OutboundPage() {
@@ -45,7 +48,7 @@ export default function OutboundPage() {
   }
 
   // 提交出库
-  const handleSubmit = (formData: { 
+  const handleSubmit = (formData: {
     sellingPrice: number
     exchangeRate: number
     outboundType: "出库" | "折损"
@@ -59,6 +62,7 @@ export default function OutboundPage() {
       productType: product.type,
       productBrand: product.brand,
       productCountry: product.country,
+      productTags: product.tags,
       cost: product.cost,
       sellingPrice: formData.sellingPrice,
       exchangeRate: formData.exchangeRate,
