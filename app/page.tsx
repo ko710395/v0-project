@@ -7,18 +7,20 @@ import { OutboundForm } from "@/components/outbound-form"
 import { OutboundHistory } from "@/components/outbound-history"
 import type { Product, OutboundRecord } from "@/lib/types"
 
-// 测试用例数据
+// 测试用例数据 - 产品名使用邮箱形式
 const initialProducts: Product[] = [
-  { id: "1", name: "iPhone 15 Pro", type: "手机", cost: 6999 },
-  { id: "2", name: "MacBook Pro 14", type: "笔记本电脑", cost: 14999 },
-  { id: "3", name: "AirPods Pro 2", type: "耳机", cost: 1899 },
-  { id: "4", name: "iPad Air", type: "平板电脑", cost: 4799 },
-  { id: "5", name: "Apple Watch Ultra", type: "智能手表", cost: 6499 },
-  { id: "6", name: "Sony WH-1000XM5", type: "耳机", cost: 2499 },
-  { id: "7", name: "Samsung Galaxy S24", type: "手机", cost: 5999 },
-  { id: "8", name: "Dell XPS 15", type: "笔记本电脑", cost: 12999 },
-  { id: "9", name: "Nintendo Switch", type: "游戏机", cost: 2099 },
-  { id: "10", name: "Kindle Paperwhite", type: "电子书阅读器", cost: 999 },
+  { id: "1", name: "john.doe@gmail.com", type: "自加ID", brand: "Google", country: "美国", cost: 150 },
+  { id: "2", name: "alice.smith@outlook.com", type: "链接单", brand: "Microsoft", country: "美国", cost: 200 },
+  { id: "3", name: "zhang.wei@qq.com", type: "自加ID", brand: "腾讯", country: "中国", cost: 80 },
+  { id: "4", name: "tanaka.yuki@yahoo.co.jp", type: "链接单", brand: "Yahoo", country: "日本", cost: 180 },
+  { id: "5", name: "kim.soo@naver.com", type: "自加ID", brand: "Naver", country: "韩国", cost: 120 },
+  { id: "6", name: "maria.garcia@icloud.com", type: "链接单", brand: "Apple", country: "美国", cost: 250 },
+  { id: "7", name: "li.ming@163.com", type: "自加ID", brand: "网易", country: "中国", cost: 90 },
+  { id: "8", name: "david.wilson@proton.me", type: "链接单", brand: "Proton", country: "瑞士", cost: 300 },
+  { id: "9", name: "sakura.hana@docomo.ne.jp", type: "自加ID", brand: "Docomo", country: "日本", cost: 160 },
+  { id: "10", name: "emma.brown@hotmail.com", type: "链接单", brand: "Microsoft", country: "英国", cost: 180 },
+  { id: "11", name: "wang.fang@sina.com", type: "自加ID", brand: "新浪", country: "中国", cost: 70 },
+  { id: "12", name: "park.jimin@kakao.com", type: "链接单", brand: "Kakao", country: "韩国", cost: 140 },
 ]
 
 export default function OutboundPage() {
@@ -43,22 +45,40 @@ export default function OutboundPage() {
   }
 
   // 提交出库
-  const handleSubmit = (formData: { sellingPrice: number; exchangeRate: number; outboundType: "出库" | "折损" }) => {
+  const handleSubmit = (formData: { 
+    sellingPrice: number
+    exchangeRate: number
+    outboundType: "出库" | "折损"
+    remark: string
+  }) => {
     if (selectedProducts.length === 0) return
 
     const newRecords: OutboundRecord[] = selectedProducts.map((product) => ({
       id: `${product.id}-${Date.now()}`,
       productName: product.name,
       productType: product.type,
+      productBrand: product.brand,
+      productCountry: product.country,
       cost: product.cost,
       sellingPrice: formData.sellingPrice,
       exchangeRate: formData.exchangeRate,
       outboundType: formData.outboundType,
       outboundTime: new Date().toLocaleString("zh-CN"),
+      remark: formData.remark || undefined,
+      status: "有效" as const,
     }))
 
     setOutboundRecords((prev) => [...newRecords, ...prev])
     setSelectedProducts([])
+  }
+
+  // 撤回出库记录
+  const handleRevoke = (recordId: string) => {
+    setOutboundRecords((prev) =>
+      prev.map((record) =>
+        record.id === recordId ? { ...record, status: "已撤回" as const } : record
+      )
+    )
   }
 
   return (
@@ -90,10 +110,11 @@ export default function OutboundPage() {
           onSubmit={handleSubmit}
           disabled={selectedProducts.length === 0}
           selectedCount={selectedProducts.length}
+          totalCost={selectedProducts.reduce((sum, p) => sum + p.cost, 0)}
         />
 
         {/* 下部分：出库记录列表 */}
-        <OutboundHistory records={outboundRecords} />
+        <OutboundHistory records={outboundRecords} onRevoke={handleRevoke} />
       </div>
     </main>
   )

@@ -58,15 +58,22 @@ export function SelectedProducts({ products, onDeselect, title, emptyText }: Sel
     <Card className="border-primary/20 bg-primary/5">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <ShoppingCart className="h-5 w-5 text-primary" />
-            {title}
+          <div className="flex flex-col gap-1">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <ShoppingCart className="h-5 w-5 text-primary" />
+              {title}
+              {products.length > 0 && (
+                <Badge className="ml-2">
+                  {products.length} 件
+                </Badge>
+              )}
+            </CardTitle>
             {products.length > 0 && (
-              <Badge className="ml-2">
-                {products.length} 件
-              </Badge>
+              <p className="text-sm text-muted-foreground">
+                总成本: <span className="font-semibold text-primary">¥{totalCost.toLocaleString()}</span>
+              </p>
             )}
-          </CardTitle>
+          </div>
           {products.length > 0 && (
             <Button
               variant="outline"
@@ -80,11 +87,6 @@ export function SelectedProducts({ products, onDeselect, title, emptyText }: Sel
             </Button>
           )}
         </div>
-        {products.length > 0 && (
-          <p className="text-sm text-muted-foreground">
-            总成本: <span className="font-semibold text-foreground">¥{totalCost.toLocaleString()}</span>
-          </p>
-        )}
       </CardHeader>
       <CardContent>
         {products.length === 0 ? (
@@ -99,8 +101,7 @@ export function SelectedProducts({ products, onDeselect, title, emptyText }: Sel
             <div className="mb-3 flex items-center gap-2 border-b border-border pb-3">
               <Checkbox
                 id="deselect-all"
-                checked={isAllChecked}
-                data-indeterminate={isIndeterminate}
+                checked={isIndeterminate ? "indeterminate" : isAllChecked}
                 onCheckedChange={handleSelectAll}
               />
               <label
@@ -126,13 +127,19 @@ export function SelectedProducts({ products, onDeselect, title, emptyText }: Sel
                     />
                     <label
                       htmlFor={`selected-${product.id}`}
-                      className="flex flex-1 cursor-pointer items-center justify-between"
+                      className="flex flex-1 cursor-pointer items-center justify-between gap-2"
                     >
-                      <div>
-                        <p className="font-medium text-foreground">{product.name}</p>
-                        <p className="text-sm text-muted-foreground">{product.type}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium text-foreground">{product.name}</p>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>{product.type}</span>
+                          <span>·</span>
+                          <span>{product.brand}</span>
+                          <span>·</span>
+                          <span>{product.country}</span>
+                        </div>
                       </div>
-                      <Badge variant="outline" className="font-mono">
+                      <Badge variant="outline" className="font-mono shrink-0">
                         ¥{product.cost.toLocaleString()}
                       </Badge>
                     </label>
