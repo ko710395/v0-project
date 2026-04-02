@@ -345,6 +345,9 @@ export function ProductSelector({ products, onSelect, title, emptyText }: Produc
                           <Badge variant="outline" className="text-xs">
                             {product.brand}
                           </Badge>
+                          <Badge variant="outline" className="text-xs text-muted-foreground">
+                            {product.country}
+                          </Badge>
                           <Badge variant="outline" className="font-mono text-xs">
                             ¥{product.cost.toLocaleString()}
                           </Badge>
