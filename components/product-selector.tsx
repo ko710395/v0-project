@@ -57,7 +57,7 @@ export function ProductSelector({ products, onSelect, title, emptyText }: Produc
       const matchesType = filterType === "all" || product.type === filterType
       const matchesCountry = filterCountry === "all" || product.country === filterCountry
       const matchesTags =
-        filterTags.size === 0 || [...filterTags].every((tag) => (product.tags ?? []).includes(tag))
+        filterTags.size === 0 || [...filterTags].some((tag) => (product.tags ?? []).includes(tag))
       return matchesSearch && matchesBrand && matchesType && matchesCountry && matchesTags
     })
   }, [products, searchQuery, filterBrand, filterType, filterCountry, filterTags])

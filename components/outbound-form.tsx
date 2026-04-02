@@ -10,19 +10,40 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { FileOutput, Trash2, Send, Info } from "lucide-react"
+import { FileOutput, Trash2, Send, Info, MessageCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+
+// 微信群组测试数据
+const WECHAT_GROUPS = [
+  "邮箱出货群-01",
+  "邮箱出货群-02",
+  "谷歌邮箱专区群",
+  "雅虎邮箱专区群",
+  "QQ邮箱专区群",
+  "精品邮箱VIP群",
+  "微软邮箱批发群",
+  "韩国邮箱交流群",
+  "日本邮箱专线群",
+]
 
 interface OutboundFormProps {
   onSubmit: (data: {
     sellingPrice: number
     exchangeRate: number
     outboundType: "出库" | "折损"
+    wechatGroup: string
     remark: string
   }) => void
   disabled: boolean
@@ -34,6 +55,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
   const [sellingPrice, setSellingPrice] = useState("")
   const [exchangeRate, setExchangeRate] = useState("1.00")
   const [outboundType, setOutboundType] = useState<"出库" | "折损">("出库")
+  const [wechatGroup, setWechatGroup] = useState("")
   const [remark, setRemark] = useState("")
 
   const isLoss = outboundType === "折损"
@@ -51,17 +73,23 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
         return
       }
     }
+    if (!wechatGroup) {
+      alert("请选择出库群")
+      return
+    }
 
     onSubmit({
       sellingPrice: isLoss ? 0 : parseFloat(sellingPrice),
       exchangeRate: isLoss ? 1 : parseFloat(exchangeRate),
       outboundType,
+      wechatGroup,
       remark: remark.trim(),
     })
 
     setSellingPrice("")
     setExchangeRate("1.00")
     setOutboundType("出库")
+    setWechatGroup("")
     setRemark("")
   }
 
@@ -83,16 +111,16 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* 第一行：售价、汇率、出库类型 */}
+          {/* 第一行：售价、汇率、出库类型、出库群 */}
           <div className="flex flex-wrap items-end gap-4">
             {/* 售价 */}
-            <FieldGroup className="flex-1 min-w-[160px]">
+            <FieldGroup className="flex-1 min-w-[140px]">
               <Field>
                 <FieldLabel
                   htmlFor="selling-price"
                   className={cn("flex items-center gap-1", isLoss && "text-muted-foreground")}
                 >
-                  售价 (¥)
+                  售价
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -119,7 +147,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
             </FieldGroup>
 
             {/* 汇率 */}
-            <FieldGroup className="flex-1 min-w-[160px]">
+            <FieldGroup className="flex-1 min-w-[140px]">
               <Field>
                 <FieldLabel
                   htmlFor="exchange-rate"
@@ -142,7 +170,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
             </FieldGroup>
 
             {/* 出库类型 */}
-            <FieldGroup className="min-w-[180px]">
+            <FieldGroup className="min-w-[160px]">
               <Field>
                 <FieldLabel>出库类型</FieldLabel>
                 <RadioGroup
@@ -171,6 +199,35 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
                     </Label>
                   </div>
                 </RadioGroup>
+              </Field>
+            </FieldGroup>
+
+            {/* 出库群（必填） */}
+            <FieldGroup className="flex-1 min-w-[180px]">
+              <Field>
+                <FieldLabel htmlFor="wechat-group" className="flex items-center gap-1">
+                  <MessageCircle className="h-3.5 w-3.5 text-green-500" />
+                  出库群
+                  <span className="text-destructive text-xs">*</span>
+                </FieldLabel>
+                <Select value={wechatGroup} onValueChange={setWechatGroup}>
+                  <SelectTrigger
+                    id="wechat-group"
+                    className={cn(!wechatGroup && "text-muted-foreground")}
+                  >
+                    <SelectValue placeholder="请选择微信群组" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WECHAT_GROUPS.map((group) => (
+                      <SelectItem key={group} value={group}>
+                        <span className="flex items-center gap-1.5">
+                          <MessageCircle className="h-3.5 w-3.5 text-green-500" />
+                          {group}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </Field>
             </FieldGroup>
           </div>

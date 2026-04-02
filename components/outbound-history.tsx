@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Empty, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
-import { ClipboardList, Send, Trash2, Undo2, Tag } from "lucide-react"
+import { ClipboardList, Send, Trash2, Undo2, Tag, MessageCircle } from "lucide-react"
 import type { OutboundRecord } from "@/lib/types"
 
 interface OutboundHistoryProps {
@@ -59,6 +59,7 @@ export function OutboundHistory({ records, onRevoke }: OutboundHistoryProps) {
                   <TableHead className="min-w-[60px] text-right">汇率</TableHead>
                   <TableHead className="min-w-[100px] text-right">换算售价 (¥)</TableHead>
                   <TableHead className="min-w-[80px] text-center">出库类型</TableHead>
+                  <TableHead className="min-w-[160px]">出库群</TableHead>
                   <TableHead className="min-w-[80px] text-center">状态</TableHead>
                   <TableHead className="min-w-[150px]">备注</TableHead>
                   <TableHead className="min-w-[160px]">出库时间</TableHead>
@@ -142,6 +143,12 @@ export function OutboundHistory({ records, onRevoke }: OutboundHistoryProps) {
                             折损
                           </Badge>
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                          <MessageCircle className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                          {record.wechatGroup}
+                        </span>
                       </TableCell>
                       <TableCell className="text-center">
                         {isRevoked ? (

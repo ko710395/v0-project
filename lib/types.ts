@@ -19,6 +19,7 @@ export interface OutboundRecord {
   sellingPrice: number
   exchangeRate: number
   outboundType: "出库" | "折损"
+  wechatGroup: string
   outboundTime: string
   remark?: string
   status: "有效" | "已撤回"

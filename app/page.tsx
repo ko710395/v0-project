@@ -52,6 +52,7 @@ export default function OutboundPage() {
     sellingPrice: number
     exchangeRate: number
     outboundType: "出库" | "折损"
+    wechatGroup: string
     remark: string
   }) => {
     if (selectedProducts.length === 0) return
@@ -67,6 +68,7 @@ export default function OutboundPage() {
       sellingPrice: formData.sellingPrice,
       exchangeRate: formData.exchangeRate,
       outboundType: formData.outboundType,
+      wechatGroup: formData.wechatGroup,
       outboundTime: new Date().toLocaleString("zh-CN"),
       remark: formData.remark || undefined,
       status: "有效" as const,
