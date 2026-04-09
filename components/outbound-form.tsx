@@ -108,76 +108,14 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
           {selectedCount > 0 && (
             <div className="flex items-center gap-3">
               <Badge variant="secondary">已选择 {selectedCount} 件产品</Badge>
-              <Badge variant="outline">总成本: ¥{totalCost.toLocaleString()}</Badge>
+              <Badge variant="outline">总成本: ¥ {totalCost.toLocaleString()}</Badge>
             </div>
           )}
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* 第一行：售价、汇率 */}
-          <div className="flex flex-wrap items-end gap-4">
-            {/* 售价 */}
-            <FieldGroup className="flex-1 min-w-[140px]">
-              <Field>
-                <FieldLabel
-                  htmlFor="selling-price"
-                  className={cn("flex items-center gap-1", isLoss && "text-muted-foreground")}
-                >
-                  总售价
-                  {!isLoss && <span className="text-destructive text-xs">*</span>}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>该售价是包含所选的所有产品的总售价；</p>
-                        <p>选择多个产品时总售价会按照各成本等比例分配至各个产品；</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </FieldLabel>
-                <Input
-                  id="selling-price"
-                  type="number"
-                  placeholder={isLoss ? "折损无需填写" : "请输入售价"}
-                  value={isLoss ? "" : sellingPrice}
-                  onChange={(e) => setSellingPrice(e.target.value)}
-                  min="0"
-                  step="0.01"
-                  disabled={isLoss}
-                  className={cn(isLoss && "bg-muted text-muted-foreground cursor-not-allowed")}
-                />
-              </Field>
-            </FieldGroup>
-
-            {/* 汇率 */}
-            <FieldGroup className="flex-1 min-w-[140px]">
-              <Field>
-                <FieldLabel
-                  htmlFor="exchange-rate"
-                  className={cn(isLoss && "text-muted-foreground")}
-                >
-                  汇率
-                  {!isLoss && <span className="text-destructive text-xs">*</span>}
-                </FieldLabel>
-                <Input
-                  id="exchange-rate"
-                  type="number"
-                  placeholder={isLoss ? "折损无需填写" : "请输入汇率"}
-                  value={isLoss ? "" : exchangeRate}
-                  onChange={(e) => setExchangeRate(e.target.value)}
-                  min="0"
-                  step="0.01"
-                  disabled={isLoss}
-                  className={cn(isLoss && "bg-muted text-muted-foreground cursor-not-allowed")}
-                />
-              </Field>
-            </FieldGroup>
-          </div>
-
-          {/* 第二行：出库类型 + 出库群 */}
+          {/* 第一行：出库类型 + 出库群 */}
           <div className="flex flex-wrap items-end gap-4">
             {/* 出库类型 */}
             <FieldGroup className="flex-1 min-w-[140px]">
@@ -255,7 +193,70 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
             </FieldGroup>
           </div>
 
-          {/* 第二行：备注 + 提交按钮同行 */}
+
+          {/* 第二行：售价、汇率 */}
+          <div className="flex flex-wrap items-end gap-4">
+            {/* 售价 */}
+            <FieldGroup className="flex-1 min-w-[140px]">
+              <Field>
+                <FieldLabel
+                  htmlFor="selling-price"
+                  className={cn("flex items-center gap-1", isLoss && "text-muted-foreground")}
+                >
+                  总售价
+                  {!isLoss && <span className="text-destructive text-xs">*</span>}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>该售价是包含所选的所有产品的总售价；</p>
+                        <p>选择多个产品时总售价会按照各成本等比例分配至各个产品；</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FieldLabel>
+                <Input
+                  id="selling-price"
+                  type="number"
+                  placeholder={isLoss ? "折损无需填写" : "请输入售价"}
+                  value={isLoss ? "" : sellingPrice}
+                  onChange={(e) => setSellingPrice(e.target.value)}
+                  min="0"
+                  step="0.01"
+                  disabled={isLoss}
+                  className={cn(isLoss && "bg-muted text-muted-foreground cursor-not-allowed")}
+                />
+              </Field>
+            </FieldGroup>
+
+            {/* 汇率 */}
+            <FieldGroup className="flex-1 min-w-[140px]">
+              <Field>
+                <FieldLabel
+                  htmlFor="exchange-rate"
+                  className={cn(isLoss && "text-muted-foreground")}
+                >
+                  汇率
+                  {!isLoss && <span className="text-destructive text-xs">*</span>}
+                </FieldLabel>
+                <Input
+                  id="exchange-rate"
+                  type="number"
+                  placeholder={isLoss ? "折损无需填写" : "请输入汇率"}
+                  value={isLoss ? "" : exchangeRate}
+                  onChange={(e) => setExchangeRate(e.target.value)}
+                  min="0"
+                  step="0.01"
+                  disabled={isLoss}
+                  className={cn(isLoss && "bg-muted text-muted-foreground cursor-not-allowed")}
+                />
+              </Field>
+            </FieldGroup>
+          </div>
+
+          {/* 第三行：备注 + 提交按钮同行 */}
           <div className="flex items-end gap-3">
             <FieldGroup className="flex-1">
               <Field>
