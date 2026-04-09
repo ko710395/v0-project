@@ -72,13 +72,13 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
         alert("请输入有效的汇率")
         return
       }
+      if (!wechatGroup) {
+        alert("请选择出库群")
+        return
+    }
     }
     if (isLoss && !remark) {
       alert("折损时请输入备注")
-      return
-    }
-    if (!wechatGroup) {
-      alert("请选择出库群")
       return
     }
 
