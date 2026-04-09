@@ -73,6 +73,10 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
         return
       }
     }
+    if (isLoss && !remark) {
+      alert("折损时请输入备注")
+      return
+    }
     if (!wechatGroup) {
       alert("请选择出库群")
       return
@@ -111,7 +115,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-            {/* 第一行：售价、汇率 */}
+          {/* 第一行：售价、汇率 */}
           <div className="flex flex-wrap items-end gap-4">
             {/* 售价 */}
             <FieldGroup className="flex-1 min-w-[140px]">
@@ -120,14 +124,16 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
                   htmlFor="selling-price"
                   className={cn("flex items-center gap-1", isLoss && "text-muted-foreground")}
                 >
-                  售价
+                  总售价
+                  {!isLoss && <span className="text-destructive text-xs">*</span>}
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>该售价是包含所选的所有产品的总售价</p>
+                        <p>该售价是包含所选的所有产品的总售价；</p>
+                        <p>选择多个产品时总售价会按照各成本等比例分配至各个产品；</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -154,6 +160,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
                   className={cn(isLoss && "text-muted-foreground")}
                 >
                   汇率
+                  {!isLoss && <span className="text-destructive text-xs">*</span>}
                 </FieldLabel>
                 <Input
                   id="exchange-rate"
@@ -173,7 +180,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
           {/* 第二行：出库类型 + 出库群 */}
           <div className="flex flex-wrap items-end gap-4">
             {/* 出库类型 */}
-            <FieldGroup className="min-w-[160px]">
+            <FieldGroup className="flex-1 min-w-[140px]">
               <Field>
                 <FieldLabel>出库类型</FieldLabel>
                 <RadioGroup
@@ -209,7 +216,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
             </FieldGroup>
 
             {/* 出库群（必填，折损时禁用） */}
-            <FieldGroup className="w-[200px]">
+            <FieldGroup className="flex-1 min-w-[140px]">
               <Field>
                 <FieldLabel
                   htmlFor="wechat-group"
@@ -252,7 +259,7 @@ export function OutboundForm({ onSubmit, disabled, selectedCount, totalCost }: O
           <div className="flex items-end gap-3">
             <FieldGroup className="flex-1">
               <Field>
-                <FieldLabel htmlFor="remark">备注（选填）</FieldLabel>
+                <FieldLabel htmlFor="remark">备注{isLoss ? " (必填)" : " (选填)"}{isLoss && <span className="text-destructive text-xs">*</span>}</FieldLabel>
                 <Textarea
                   id="remark"
                   placeholder="请输入备注信息..."
